@@ -32,7 +32,7 @@ function start() {
     .then( (inputs) => {
         console.log(inputs.action);
         switch(inputs.action) {
-            case "View All Employess":
+            case "View All Employees":
                 viewEmployees();
                 break;
             case "Add An Employee":
@@ -65,14 +65,26 @@ function start() {
 };
 
 //Showing All Employees
+// viewEmployees = () => {
+//     console.log("Showing all the employees ...");
+//     connection.query("SELECT * FROM employee", (err, res) => {
+//         if (err) throw err;
+//         console.table(res);
+//         start();
+//     });
+// };
+
 viewEmployees = () => {
     console.log("Showing all the employees ...");
-    connection.query("SELECT * FROM employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary", (err, res) => {
+    connection.query(`SELECT employee.id, employee.first_name, employee.last_name, employee.manager_id, role.title, role.salary, department.name 
+    FROM employee 
+    LEFT JOIN role on employee.role_id = role.id 
+    LEFT JOIN department on role.department_id = department.id`, (err, res) => {
         if (err) throw err;
         console.table(res);
         start();
     });
-};
+}
 
 
 //Adding An Employee
